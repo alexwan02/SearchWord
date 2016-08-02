@@ -2,6 +2,8 @@ package org.alexwan.searchword;
 
 import android.app.Application;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import org.alexwan.searchword.realm.RealmInstance;
 
 /**
@@ -21,6 +23,8 @@ public class WordApplication extends Application {
     private void initConfig() {
         // config realm
         RealmInstance.initial(this);
+        // config fresco
+        Fresco.initialize(this);
     }
 
 

@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 
 import org.alexwan.searchword.model.Response;
 import org.alexwan.searchword.model.SearchModel;
+import org.alexwan.searchword.model.SentenceModel;
 import org.alexwan.searchword.model.WordModel;
 import org.alexwan.searchword.net.RequestService;
 import org.alexwan.searchword.net.RetrofitClient;
@@ -20,6 +21,7 @@ import org.alexwan.searchword.ui.base.BasePresenterActivity;
 import org.alexwan.searchword.ui.view.WordMainView;
 import org.alexwan.searchword.ui.widget.searchview.SearchView;
 import org.alexwan.searchword.utils.Constant;
+import org.alexwan.searchword.utils.LogUtils;
 
 import java.util.Locale;
 
@@ -29,6 +31,7 @@ import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -52,6 +55,31 @@ public class WordMainActivity extends BasePresenterActivity<WordMainView> implem
         mViewClass.addEditTextListener(this);
         addTextChangeEvent();
         getLastWord();
+        RetrofitClient.getService(Constant.ICIBA_URL , RequestService.class)
+                .getSentence("" , "json")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<SentenceModel>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(SentenceModel model) {
+                        String string = model.getTts() + " content : " +
+                        model.getContent() + " note : " +
+                        model.getNote() + " image addr : " +
+                        model.getPicture2();
+                        LogUtils.i(TAG , "SentenceModel -> sid : " + model.getSid() + string);
+                        mViewClass.setSentenceImage(model);
+                    }
+                });
     }
 
     @Override

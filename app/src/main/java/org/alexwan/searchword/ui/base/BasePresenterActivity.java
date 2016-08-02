@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -22,6 +24,7 @@ public abstract class BasePresenterActivity<V extends IBaseView> extends AppComp
             mViewClass.onInit(this , getLayoutInflater() , null);
             setContentView(mViewClass.getView());
             mCompositeSubscription = new CompositeSubscription();
+            Fresco.initialize(this);
             mViewClass.onBindView();
         } catch (Exception e) {
             throw new RuntimeException(e);

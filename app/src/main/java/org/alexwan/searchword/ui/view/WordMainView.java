@@ -6,9 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.common.util.UriUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 
 import org.alexwan.searchword.R;
+import org.alexwan.searchword.model.SentenceModel;
 import org.alexwan.searchword.model.WordModel;
 import org.alexwan.searchword.model.WordPronunciation;
 import org.alexwan.searchword.ui.adapter.SearchAdapter;
@@ -42,6 +45,8 @@ public class WordMainView implements IBaseView {
     TextView mWordDefinition;
     @BindView(R.id.progress_bar)
     MaterialProgressBar mMaterialProgressBar;
+    @BindView(R.id.sentence_img)
+    SimpleDraweeView mSentenceImage;
     @Override
     public void onInit(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         this.mContext = (BasePresenterActivity) context;
@@ -61,6 +66,12 @@ public class WordMainView implements IBaseView {
     @Override
     public void onBindView() {
         mSearchView.setVoice(true , mContext);
+        mSearchView.setOnMenuClickListener(new SearchView.OnMenuClickListener() {
+            @Override
+            public void onMenuClick() {
+                mSearchView.open(true);
+            }
+        });
     }
 
     @Override
@@ -97,5 +108,9 @@ public class WordMainView implements IBaseView {
 
     public void setProgressBarVisible(boolean isVisible){
         mMaterialProgressBar.setVisibility(isVisible  ? View.VISIBLE : View.GONE);
+    }
+
+    public void setSentenceImage(SentenceModel mode){
+        mSentenceImage.setImageURI(UriUtil.parseUriOrNull(mode.getPicture2()));
     }
 }
